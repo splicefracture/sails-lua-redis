@@ -4,8 +4,9 @@ local _key        = KEYS[1]
 local _meta      = cjson.decode(KEYS[2])
 local _attribute = cjson.decode(KEYS[3])
 
-local _id_index   = cjson.decode(ARGV[1])
-local _minmax_index   = cjson.decode(ARGV[2])
+local _id_index      = cjson.decode(ARGV[1])
+local _minmax_index  = cjson.decode(ARGV[2])
+local _primary_index = cjson.decode(ARGV[3])
 
 local next = next
 
@@ -60,8 +61,12 @@ end
 -- more targeted search
 local retrieve_keys = {}
 
-for _, obj in pairs(_id_index) do
-    for key, val in pairs(obj) do
+for _, key in pairs(_primary_index) do
+    table.insert(retrieve_keys,key)
+end
+
+for key, obj in pairs(_id_index) do
+    for _, val in pairs(obj) do
         local pri, err = redis.call("zrangebyscore", "waterline:".._key..":"..key, val, val);
         for _,pval in pairs(pri) do
             table.insert(retrieve_keys,pval)
@@ -69,14 +74,27 @@ for _, obj in pairs(_id_index) do
     end
 end
 
-for _, obj in pairs(_minmax_index) do    
-    for key, val in pairs(obj) do
-        local pri, err = redis.call("zrangebyscore", "waterline:".._key..":"..key, val['min'], val['max']);
-        for _,pval in pairs(pri) do
-            table.insert(retrieve_keys,pval)
-        end
+for key, obj in pairs(_minmax_index) do    
+
+    local _min = 0
+    if obj['min'] then 
+        local _min = obj['min']
     end
+    
+    local _max = 2^64
+    if obj['max'] then 
+        _max = obj['max']
+    end
+        
+    local pri, err = redis.call("zrangebyscore", "waterline:".._key..":"..key, _min, _max);
+
+    for _,pval in pairs(pri) do
+        table.insert(retrieve_keys,pval)
+    end
+    
 end
+
+
 
 local output = {}
 for idx, key in pairs(retrieve_keys) do
