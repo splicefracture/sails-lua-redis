@@ -22,7 +22,8 @@ describe('adapter `.find()`', function() {
         type: 'string'
       },
       age: {
-        type: 'integer'
+        type: 'integer',
+        index : true
       }
     };
 

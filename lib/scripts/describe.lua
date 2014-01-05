@@ -3,7 +3,6 @@ local key        = KEYS[1]
 local meta, err = redis.call("hgetall", "waterline:"..key..":meta");
 local attr, err = redis.call("hgetall", "waterline:"..key..":attribute");
 
-
 if not meta or not attr then
     return {err="   "}
 end

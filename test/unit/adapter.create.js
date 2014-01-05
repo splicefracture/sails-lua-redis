@@ -123,7 +123,6 @@ describe('adapter `.create()`', function() {
         if(err) throw err;
         
         Adapter.create('unique', attributes, function(err, model2) {
-
           assert(err);
           assert(err.message === Errors.notUnique.message);
           assert(!model2);
@@ -178,9 +177,9 @@ describe('adapter `.create()`', function() {
     });
 
     it('should create record with auto increments', function(done) {
-      Adapter.create('auto', {}, function(err, model) {
+      Adapter.create('auto', {}, function(err, model) {  
         if(err) throw err;
-
+        
         assert(model);
         assert(model.id === 1);
         assert(model.age === 1);

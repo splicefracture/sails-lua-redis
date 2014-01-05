@@ -1,5 +1,9 @@
 local key         = KEYS[1]
 
+local key         = KEYS[1]
+local key         = KEYS[1]
+
+
 -- table attributes values
 local aa, err = redis.call("hgetall", "waterline:"..key..":attribute");
 local attr = {}

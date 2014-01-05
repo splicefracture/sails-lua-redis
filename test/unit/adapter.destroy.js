@@ -56,6 +56,7 @@ describe('adapter `.destroy()`', function() {
           if(err) throw err;
           //assert(err);
           //assert(err.message === Errors.notFound.message);
+          
           assert(!models.length);
           done();
         });
